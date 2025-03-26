@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Your Order - ThreadCraft</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Global Styles */
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #e74c3c;
+            --accent-color: #3498db;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --gray-color: #95a5a6;
+            --white-color: #ffffff;
+            --black-color: #333333;
+            --transition: all 0.3s ease;
+            --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            --border-radius: 4px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 62.5%;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--black-color);
+            background-color: var(--white-color);
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background-color: var(--secondary-color);
+            color: var(--white-color);
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 1.4rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: var(--transition);
+        }
+
+        .btn:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-3px);
+            box-shadow: var(--box-shadow);
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 5rem;
+            padding-top: 8rem;
+        }
+
+        .section-title h2 {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Header Styles */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 2rem 0;
+            background-color: var(--white-color);
+            box-shadow: var(--box-shadow);
+            z-index: 1000;
+            transition: var(--transition);
+        }
+
+        .header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo a {
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            letter-spacing: 1px;
+        }
+
+        .logo a span {
+            color: var(--secondary-color);
+        }
+
+        .main-nav ul {
+            display: flex;
+        }
+
+        .main-nav ul li {
+            margin-left: 3rem;
+        }
+
+        .main-nav ul li a {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .main-nav ul li a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--secondary-color);
+            transition: var(--transition);
+        }
+
+        .main-nav ul li a:hover::after {
+            width: 100%;
+        }
+
+        .main-nav ul li a:hover {
+            color: var(--secondary-color);
+        }
+
+        .header-icons {
+            display: flex;
+            align-items: center;
+        }
+
+        .header-icons a {
+            font-size: 1.8rem;
+            margin-left: 2rem;
+            color: var(--dark-color);
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .header-icons a:hover {
+            color: var(--secondary-color);
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background-color: var(--secondary-color);
+            color: var(--white-color);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        #menu-btn {
+            font-size: 2.5rem;
+            color: var(--dark-color);
+            cursor: pointer;
+            display: none;
+            margin-left: 2rem;
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100vh;
+            background-color: var(--white-color);
+            z-index: 1001;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: var(--transition);
+        }
+
+        .mobile-menu.active {
+            left: 0;
+        }
+
+        .mobile-menu ul li {
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .mobile-menu ul li a {
+            font-size: 2.5rem;
+            color: var(--dark-color);
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .mobile-menu ul li a:hover {
+            color: var(--secondary-color);
+        }
+
+        /* Track Order Content */
+        .track-order-container {
+            padding: 8rem 0;
+        }
+
+        .track-order-form {
+            max-width: 60rem;
+            margin: 0 auto 5rem;
+            background-color: #f9f9f9;
+            padding: 3rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        .track-order-form h3 {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 2rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 1.4rem;
+            color: var(--dark-color);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 1.2rem;
+            font-size: 1.6rem;
+            border: 1px solid var(--light-color);
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+
+        .form-group input:focus {
+            border-color: var(--secondary-color);
+            outline: none;
+        }
+
+        .order-status-container {
+            display: none;
+            background-color: #f9f9f9;
+            padding: 3rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-top: 3rem;
+        }
+
+        .order-status-container.active {
+            display: block;
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--light-color);
+        }
+
+        .order-header h3 {
+            font-size: 2rem;
+            color: var(--primary-color);
+        }
+
+        .order-number {
+            font-size: 1.6rem;
+            color: var(--gray-color);
+        }
+
+        .order-details {
+            display: flex;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .order-summary, .shipping-info {
+            flex: 1;
+        }
+
+        .order-summary h4, .shipping-info h4 {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .order-items {
+            margin-bottom: 2rem;
+        }
+
+        .order-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--light-color);
+        }
+
+        .order-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .order-item-img {
+            width: 8rem;
+            height: 8rem;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            margin-right: 1.5rem;
+        }
+
+        .order-item-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .order-item-details h5 {
+            font-size: 1.6rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .order-item-details p {
+            font-size: 1.4rem;
+            color: var(--gray-color);
+        }
+
+        .order-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--light-color);
+        }
+
+        .order-total h5 {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+        }
+
+        .order-total p {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--secondary-color);
+        }
+
+        .shipping-info p {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .status-timeline {
+            position: relative;
+            padding-left: 3rem;
+            margin-top: 3rem;
+        }
+
+        .status-timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0.7rem;
+            width: 2px;
+            height: 100%;
+            background-color: var(--light-color);
+        }
+
+        .status-item {
+            position: relative;
+            padding-bottom: 3rem;
+        }
+
+        .status-item:last-child {
+            padding-bottom: 0;
+        }
+
+        .status-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -3rem;
+            width: 1.6rem;
+            height: 1.6rem;
+            border-radius: 50%;
+            background-color: var(--light-color);
+            z-index: 1;
+        }
+
+        .status-item.active::before {
+            background-color: var(--secondary-color);
+            box-shadow: 0 0 0 4px rgba(231, 76, 60, 0.2);
+        }
+
+        .status-item.completed::before {
+            background-color: #2ecc71;
+            box-shadow: 0 0 0 4px rgba(46, 204, 113, 0.2);
+        }
+
+        .status-content {
+            background-color: var(--white-color);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        .status-content h5 {
+            font-size: 1.6rem;
+            color: var(--dark-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .status-content p {
+            font-size: 1.4rem;
+            color: var(--gray-color);
+        }
+
+        .status-date {
+            font-size: 1.2rem;
+            color: var(--gray-color);
+            margin-top: 0.5rem;
+        }
+
+        .no-orders {
+            text-align: center;
+            padding: 5rem;
+            background-color: #f9f9f9;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        .no-orders i {
+            font-size: 5rem;
+            color: var(--gray-color);
+            margin-bottom: 2rem;
+        }
+
+        .no-orders h3 {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .no-orders p {
+            font-size: 1.6rem;
+            color: var(--black-color);
+            margin-bottom: 2rem;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: var(--primary-color);
+            color: var(--white-color);
+            padding: 8rem 0 0;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(25rem, 1fr));
+            gap: 3rem;
+            margin-bottom: 5rem;
+        }
+
+        .footer-col h3 {
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+
+        .footer-col h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 5rem;
+            height: 2px;
+            background-color: var(--secondary-color);
+        }
+
+        .footer-col p {
+            font-size: 1.4rem;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-col ul li a {
+            font-size: 1.4rem;
+            color: var(--light-color);
+            transition: var(--transition);
+            display: block;
+        }
+
+        .footer-col ul li a:hover {
+            color: var(--secondary-color);
+            transform: translateX(1rem);
+        }
+
+        .footer-col ul li i {
+            margin-right: 1rem;
+            color: var(--secondary-color);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .social-links a {
+            width: 4rem;
+            height: 4rem;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.6rem;
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-0.5rem);
+        }
+
+        .copyright {
+            text-align: center;
+            padding: 2rem 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .copyright p {
+            font-size: 1.4rem;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 991px) {
+            html {
+                font-size: 55%;
+            }
+
+            .main-nav {
+                display: none;
+            }
+
+            #menu-btn {
+                display: inline-block;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .order-details {
+                flex-direction: column;
+            }
+
+            .track-order-form, .order-status-container {
+                padding: 2rem;
+            }
+        }
+
+        @media (max-width: 450px) {
+            html {
+                font-size: 50%;
+            }
+
+            .header .container {
+                flex-wrap: wrap;
+            }
+
+            .logo {
+                order: 1;
+                width: 100%;
+                text-align: center;
+                margin-bottom: 1rem;
+            }
+
+            .header-icons {
+                order: 2;
+                margin: 0 auto;
+            }
+
+            #menu-btn {
+                order: 3;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <a href="index.html">ThreadCraft</a>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="index.html#shop">Shop</a></li>
+                    <li><a href="index.html#about">About</a></li>
+                    <li><a href="index.html#contact">Contact</a></li>
+                    <li><a href="track-order.html" class="active">Track Order</a></li>
+                </ul>
+            </nav>
+            <div class="header-icons">
+                <a href="#" id="search-btn"><i class="fas fa-search"></i></a>
+                <a href="#" id="user-btn"><i class="fas fa-user"></i></a>
+                <a href="index.html#cart" id="cart-btn"><i class="fas fa-shopping-cart"></i><span class="cart-count">0</span></a>
+                <div id="menu-btn" class="fas fa-bars"></div>
+            </div>
+            
+            <!-- Search Form -->
+            
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu">
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="index.html#shop">Shop</a></li>
+            <li><a href="index.html#about">About</a></li>
+            <li><a href="index.html#contact">Contact</a></li>
+            <li><a href="track-order.html" class="active">Track Order</a></li>
+        </ul>
+    </div>
+
+    <!-- Track Order Content -->
+    <section class="track-order-container">
+        <div class="container">
+            <div class="section-title">
+                <h2>Track Your Order</h2>
+                <p>Check the status of your recent orders</p>
+            </div>
+
+            <div class="track-order-form">
+                <h3>Find Your Order</h3>
+                <form id="track-order-form">
+                    <div class="form-group">
+                        <label for="order-number">Order Number</label>
+                        <input type="text" id="order-number" placeholder="Enter your order number" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" placeholder="Enter the email used for ordering" required>
+                    </div>
+                    <button type="submit" class="btn">Track Order</button>
+                </form>
+            </div>
+
+            <!-- Order Status will be displayed here -->
+            <div id="order-status-container" class="order-status-container">
+                <!-- Content will be loaded via JavaScript -->
+            </div>
+
+            <!-- Displayed when no orders are found -->
+            <div id="no-orders" class="no-orders" style="display: none;">
+                <i class="fas fa-box-open"></i>
+                <h3>No Orders Found</h3>
+                <p>We couldn't find any orders matching your information. Please check your order number and email address.</p>
+                <a href="index.html#shop" class="btn">Continue Shopping</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>ThreadCraft</h3>
+                    <p>Premium quality t-shirts with unique designs for everyone. Comfort, style, and sustainability in every thread.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-pinterest"></i></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="index.html#shop">Shop</a></li>
+                        <li><a href="index.html#about">About Us</a></li>
+                        <li><a href="index.html#contact">Contact</a></li>
+                        <li><a href="track-order.html">Track Order</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Customer Service</h3>
+                    <ul>
+                        <li><a href="shopping.html">Shipping Policy</a></li>
+                   
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                     
+                        <li><a href="track-order.html">Track Order</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Contact Info</h3>
+                    <ul>
+                        <li><i class="fas fa-map-marker-alt"></i> 123 Fashion Street, CA 90210</li>
+                        <li><i class="fas fa-phone"></i> +1 (555) 123-4567</li>
+                        <li><i class="fas fa-envelope"></i> info@threadcraft.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 ThreadCraft. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // JavaScript for Track Order Page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile Menu Toggle
+            const menuBtn = document.getElementById('menu-btn');
+            const mobileMenu = document.querySelector('.mobile-menu');
+            
+            menuBtn.addEventListener('click', function() {
+                mobileMenu.classList.toggle('active');
+                document.body.classList.toggle('no-scroll');
+            });
+
+            // Search Toggle
+            const searchBtn = document.getElementById('search-btn');
+            const searchForm = document.querySelector('.search-form');
+            
+            searchBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                searchForm.classList.toggle('active');
+            });
+
+            // Close mobile menu when clicking a link
+            document.querySelectorAll('.mobile-menu a').forEach(link => {
+                link.addEventListener('click', function() {
+                    mobileMenu.classList.remove('active');
+                    document.body.classList.remove('no-scroll');
+                });
+            });
+
+            // Track Order Form Submission
+            const trackOrderForm = document.getElementById('track-order-form');
+            const orderStatusContainer = document.getElementById('order-status-container');
+            const noOrdersMessage = document.getElementById('no-orders');
+
+            trackOrderForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const orderNumber = document.getElementById('order-number').value;
+                const email = document.getElementById('email').value;
+                
+                // In a real application, you would fetch order data from your server/database
+                // For this demo, we'll use localStorage to simulate order tracking
+                
+                // Get orders from localStorage (simulating database)
+                const orders = JSON.parse(localStorage.getItem('orders')) || [];
+                
+                // Find the order that matches the order number and email
+                const order = orders.find(o => 
+                    o.orderNumber === orderNumber && 
+                    o.email.toLowerCase() === email.toLowerCase()
+                );
+                
+                if (order) {
+                    // Display order status
+                    displayOrderStatus(order);
+                    orderStatusContainer.style.display = 'block';
+                    noOrdersMessage.style.display = 'none';
+                } else {
+                    // Show no orders found message
+                    orderStatusContainer.style.display = 'none';
+                    noOrdersMessage.style.display = 'block';
+                }
+            });
+
+            // Function to display order status
+            function displayOrderStatus(order) {
+                const statusSteps = [
+                    { 
+                        id: 'processing', 
+                        title: 'Order Processing', 
+                        description: 'We are preparing your order for shipment.',
+                        active: order.status === 'processing',
+                        completed: ['shipped', 'in-transit', 'delivered'].includes(order.status)
+                    },
+                    { 
+                        id: 'shipped', 
+                        title: 'Order Shipped', 
+                        description: 'Your order has been shipped.',
+                        active: order.status === 'shipped',
+                        completed: ['in-transit', 'delivered'].includes(order.status)
+                    },
+                    { 
+                        id: 'in-transit', 
+                        title: 'In Transit', 
+                        description: 'Your order is on its way to you.',
+                        active: order.status === 'in-transit',
+                        completed: order.status === 'delivered'
+                    },
+                    { 
+                        id: 'delivered', 
+                        title: 'Delivered', 
+                        description: 'Your order has been delivered.',
+                        active: order.status === 'delivered',
+                        completed: order.status === 'delivered'
+                    }
+                ];
+
+                // Format order date
+                const orderDate = new Date(order.date).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+
+                // Format estimated delivery date (3-5 days from order date)
+                const deliveryDate = new Date(order.date);
+                deliveryDate.setDate(deliveryDate.getDate() + 5);
+                const formattedDeliveryDate = deliveryDate.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+
+                // Generate HTML for order items
+                const orderItemsHTML = order.items.map(item => `
+                    <div class="order-item">
+                        <div class="order-item-img">
+                            <img src="${item.image}" alt="${item.title}">
+                        </div>
+                        <div class="order-item-details">
+                            <h5>${item.title}</h5>
+                            <p>Quantity: ${item.quantity}</p>
+                            <p>$${(item.price * item.quantity).toFixed(2)}</p>
+                        </div>
+                    </div>
+                `).join('');
+
+                // Generate HTML for status timeline
+                const statusTimelineHTML = statusSteps.map(step => `
+                    <div class="status-item ${step.completed ? 'completed' : ''} ${step.active ? 'active' : ''}">
+                        <div class="status-content">
+                            <h5>${step.title}</h5>
+                            <p>${step.description}</p>
+                            ${step.completed ? `<div class="status-date">Completed on ${orderDate}</div>` : ''}
+                        </div>
+                    </div>
+                `).join('');
+
+                // Set the order status container HTML
+                orderStatusContainer.innerHTML = `
+                    <div class="order-header">
+                        <h3>Order Status</h3>
+                        <span class="order-number">Order #${order.orderNumber}</span>
+                    </div>
+                    <div class="order-details">
+                        <div class="order-summary">
+                            <h4>Order Summary</h4>
+                            <div class="order-items">
+                                ${orderItemsHTML}
+                            </div>
+                            <div class="order-total">
+                                <h5>Total</h5>
+                                <p>$${order.total}</p>
+                            </div>
+                        </div>
+                        <div class="shipping-info">
+                            <h4>Shipping Information</h4>
+                            <p><strong>Name:</strong> ${order.shipping.name}</p>
+                            <p><strong>Address:</strong> ${order.shipping.address}</p>
+                            <p><strong>Email:</strong> ${order.email}</p>
+                            <p><strong>Phone:</strong> ${order.shipping.phone}</p>
+                            <p><strong>Order Date:</strong> ${orderDate}</p>
+                            <p><strong>Estimated Delivery:</strong> ${formattedDeliveryDate}</p>
+                        </div>
+                    </div>
+                    <div class="status-timeline">
+                        <h4>Order Progress</h4>
+                        ${statusTimelineHTML}
+                    </div>
+                `;
+            }
+
+            // Check if there's an order number in the URL (for direct linking)
+            const urlParams = new URLSearchParams(window.location.search);
+            const orderNumberParam = urlParams.get('order');
+            const emailParam = urlParams.get('email');
+
+            if (orderNumberParam && emailParam) {
+                document.getElementById('order-number').value = orderNumberParam;
+                document.getElementById('email').value = emailParam;
+                
+                // Trigger the form submission
+                const event = new Event('submit', { bubbles: true, cancelable: true });
+                trackOrderForm.dispatchEvent(event);
+            }
+        });
+
+        // This function would be called from your checkout page to save the order
+        // For demonstration, we'll simulate saving an order to localStorage
+        function simulateOrderCreation() {
+            const sampleOrder = {
+                orderNumber: 'TH' + Math.floor(Math.random() * 1000000),
+                date: new Date().toISOString(),
+                status: 'processing', // Can be 'processing', 'shipped', 'in-transit', 'delivered'
+                email: 'customer@example.com',
+                total: '89.97',
+                shipping: {
+                    name: 'John Doe',
+                    address: '123 Main St, Anytown, CA 90210',
+                    phone: '(555) 123-4567'
+                },
+                items: [
+                    {
+                        id: 1,
+                        title: "Classic White Tee",
+                        price: 24.99,
+                        quantity: 2,
+                        image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                    },
+                    {
+                        id: 3,
+                        title: "Graphic Print Tee",
+                        price: 32.99,
+                        quantity: 1,
+                        image: "https://images.unsplash.com/photo-1527719327859-c6ce80353573?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                    }
+                ]
+            };
+
+            // Get existing orders or initialize empty array
+            const orders = JSON.parse(localStorage.getItem('orders')) || [];
+            
+            // Add new order
+            orders.push(sampleOrder);
+            
+            // Save back to localStorage
+            localStorage.setItem('orders', JSON.stringify(orders));
+            
+            console.log('Sample order created:', sampleOrder);
+            return sampleOrder;
+        }
+
+        // Uncomment to create a sample order for testing
+        // simulateOrderCreation();
+    </script>
+</body>
+</html>
